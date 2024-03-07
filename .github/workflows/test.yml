@@ -12,7 +12,7 @@ jobs:
           message: 'This PS is good to go'
 
       - name: Comment Pull Request Multi-line
-        uses: kms-healthcare/il-actions/comment-pull-request${{ github.sha }}
+        uses: kms-healthcare/il-actions/comment-pull-request@${{ github.sha }}
           message: |
             ## This PR is good to go
             This is a multi-line comment.
