@@ -1,0 +1,49 @@
+name: Build and push docker image to GCR
+description: |
+  Build and Push Docker image to GCR
+inputs:
+  repo:
+    required: true
+    description: Name of Docker image
+
+  github-token:
+    required: true
+    description: Tag of Docker image
+
+  values-file:
+    required: true
+    description: Path to values file
+
+  xpath:
+    required: true
+    description: Image tag Xpath
+  
+  tag:
+    required: true
+    description: New image Tag
+
+runs:
+  using: composite
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        repository: ${{ inputs.repo }}
+        token: ${{ inputs.github-token }}
+    - name: Get an entry with a variable that might contain dots or spaces
+      id: get_username
+      uses: mikefarah/yq@master
+      with:
+        cmd: yq -i '${{ inputs.xpath }} = "${{ inputs.tag }}"' ${{ inputs.values-file }}
+    
+    - name: Push changes to gitops
+      run: |
+        echo Pushing changes to ${{ inputs.repo }}
+        git config user.name "IL Ops"
+        git config user.email "tsdocode@gmail.com"
+        git add .
+        git commit --allow-empty -m "Deploy \"${{ inputs.tag }}\" tag into ${{ inputs.values-file }}"
+        git push -u origin master
+      shell: bash
+
+      

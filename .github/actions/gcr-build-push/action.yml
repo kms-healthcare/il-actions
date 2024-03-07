@@ -1,0 +1,71 @@
+name: Build and push docker image to GCR
+description: |
+  Build and Push Docker image to GCR
+inputs:
+  image-name:
+    required: true
+    description: Name of Docker image
+
+  image-tag:
+    required: true
+    description: Tag of Docker image
+
+  gcloud-secrets:
+    required: true
+    description: Content of GCP service account json
+
+  gcloud-project-id:
+    required: true
+    description: GCP project ID
+
+  gcloud-registry:
+    required: true
+    description: GCR registry url
+
+  dockerfile:
+    required: true
+    description: Dockerfile path
+  
+  docker-context:
+    required: true
+    description: Docker build context
+
+runs:
+  using: composite
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Output Docker Image Name
+      id: get_image_name
+      run: |
+        echo "docker_image_name=${{ inputs.gcloud-registry}}/${{ inputs.gcloud-project-id }}/" >> $GITHUB_OUTPUT
+        echo "docker_image_tag=" >> $GITHUB_OUTPUT
+      shell: bash
+
+    - name: Build Docker Image
+      id: builder
+      working-directory: ${{ inputs.docker-context }}
+      run: |
+        docker build --tag ${{ inputs.image-name }}:${{inputs.image-tag }} -f ${{ inputs.dockerfile }}
+      shell: bash
+
+    - uses: google-github-actions/auth@v2
+      with:
+        credentials_json: '${{ inputs.gcloud-secrets }}'
+
+    - name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@v2
+  
+    - name: Configure Docker for GCR
+      run: |
+        gcloud auth configure-docker ${{ inputs.gcloud-registry }}
+      shell: bash
+
+    - name: Push Docker Image to Google Cloud Registry
+      run: |
+        docker push ${{ inputs.image-name }}:${{ inputs.image-tag }}
+      shell: bash
