@@ -7,12 +7,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Comment Pull Request Single-line
-        uses: kms-healthcare/il-actions/comment-pull-request@${{ github.sha }}
+        uses: kms-healthcare/il-actions/comment-pull-request@ops/test-common-actions
         with:
           message: 'This composite action is passed! :white_check_mark:'
 
       - name: Comment Pull Request Multi-line
-        uses: kms-healthcare/il-actions/comment-pull-request@${{ github.sha }}
+        uses: kms-healthcare/il-actions/comment-pull-request@ops/test-common-actions
         with:
           message: |
             ## This composite action is passed! :white_check_mark:
