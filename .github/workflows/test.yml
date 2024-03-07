@@ -7,12 +7,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - NAME: Comment Pull Request Single-line
-        uses: kms-healthcare/il-actions/comment-pull-request@ops/test-common-actions
+        uses: kms-healthcare/il-actions/comment-pull-request@${{ github.sha }}
         with:
           message: 'This PS is good to go'
 
       - name: Comment Pull Request Multi-line
-        uses: kms-healthcare/il-actions/comment-pull-request@ops/test-common-actions
+        uses: kms-healthcare/il-actions/comment-pull-request@${{ github.sha }}
+        with:
           message: |
             ## This PR is good to go
             This is a multi-line comment.
