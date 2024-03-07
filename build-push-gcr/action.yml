@@ -4,11 +4,11 @@ inputs:
   gcloud_registry:
     description: 'Google Cloud Registry'
     required: true
-  gcloud_project_id:
+  gcloud_project:
     description: 'Google Cloud Project ID'
     required: true
-  gcloud_service_key:
-    description: 'Google Cloud Service Key (JSON)'
+  gcloud_service_account_key:
+    description: 'Google Cloud Service Account Key (JSON)'
     required: true
   docker_image_name:
     description: 'Docker Image Name (contains repo and image name, e.g. my-repo/my-image)'
@@ -17,10 +17,6 @@ inputs:
     description: 'Docker Image Tag (default is the commit SHA)'
     default : ${{ github.sha }}
     required: true
-  github_token:
-    description: 'Personal Access Token'
-    default: ${{ github.token }}
-    required: false
   dockerfile:
     description: 'Dockerfile'
     default: 'Dockerfile'
@@ -47,8 +43,8 @@ runs:
       id: get_image_name
       shell: bash
       run: |
-        echo "docker_image_name=${{ inputs.gcloud_registry }}/${{ inputs.gcloud_project_id }}/${{ inputs.docker_image_name }}" >> $GITHUB_ENV
-        echo "docker_image_tag=${{ inputs.docker_image_tag }}" >> $GITHUB_ENV
+        echo "docker_image_name=${{ inputs.gcloud_registry }}/${{ inputs.gcloud_project_id }}/${{ inputs.docker_image_name }}" >> $GITHUB_OUTPUT
+        echo "docker_image_tag=${{ inputs.docker_image_tag }}" >> $GITHUB_OUTPUT
 
     - uses: google-github-actions/auth@v2
       with:

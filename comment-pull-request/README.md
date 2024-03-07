@@ -1,6 +1,7 @@
 # Comment Pull Request Composite Action
 
-This composite action allows you to automatically comment on a pull request in your GitHub repository.
+> [!NOTE]
+> This composite action allows you to automatically comment on a pull request in your GitHub repository.
 
 ## Usage
 
