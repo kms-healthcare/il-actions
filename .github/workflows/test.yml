@@ -1,0 +1,14 @@
+name: Test
+
+on: pull_request
+
+jobs:
+  comment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Comment Pull Request
+        uses: kms-healthcare/il-actions/comment-pull-request@ops/test-common-actions
+        with:
+          message: |
+            # Hello, world!
+            This is a multi-line comment.

@@ -8,24 +8,23 @@ inputs:
   github_token:
     description: 'GitHub Token'
     required: false
-    default: ${{ secrets.GITHUB_TOKEN }}
+    default: ${{ github.token }}
 
 runs:
   using: "composite"
   steps:
     - name: Check if Pull Request
+      shell: bash
       run: |
         if [ -z "$GITHUB_HEAD_REF" ]; then
           echo "This is not a pull request. Exiting..."
           exit 1
         fi
 
-    - name: Checkout Repository
-      uses: actions/checkout@v4
-
     - name: Split comment body with new lines
+      shell: bash
       run: |
-        echo "split_input$(echo "${{ inputs.message }}" | tr '\n' '\n')" >> $GITHUB_ENV
+        echo "split_input=$(echo "${{ inputs.message }}" | tr '\n' '\n')" >> $GITHUB_ENV
         echo $split_input
 
     - name: Comment on Pull Request

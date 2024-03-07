@@ -19,7 +19,7 @@ inputs:
     required: true
   github_token:
     description: 'Personal Access Token'
-    default: ${{ secrets.GITHUB_TOKEN }}
+    default: ${{ github.token }}
     required: false
   dockerfile:
     description: 'Dockerfile'
@@ -45,6 +45,7 @@ runs:
 
     - name: Output Docker Image Name and Tag
       id: get_image_name
+      shell: bash
       run: |
         echo "docker_image_name=${{ inputs.gcloud_registry }}/${{ inputs.gcloud_project_id }}/${{ inputs.docker_image_name }}" >> $GITHUB_ENV
         echo "docker_image_tag=${{ inputs.docker_image_tag }}" >> $GITHUB_ENV
@@ -57,14 +58,17 @@ runs:
       uses: google-github-actions/setup-gcloud@v2
 
     - name: Configure Docker for GCR
+      shell: bash
       run: |
         gcloud auth configure-docker ${{ inputs.gcloud_registry }}
 
     - name: Build Docker Image
       id: builder
+      shell: bash
       run: |
         docker build --tag ${{ steps.get_image_name.outputs.docker_image_name }}:${{ steps.get_image_name.outputs.docker_image_tag }} -f ${{ inputs.dockerfile }} ${{ inputs.context }}
 
     - name: Push Docker Image to Google Cloud Registry
+      shell: bash
       run: |
         docker push ${{ steps.get_image_name.outputs.docker_image_name }}:${{ steps.get_image_name.outputs.docker_image_tag }}
