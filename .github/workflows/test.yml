@@ -6,9 +6,22 @@ jobs:
   comment:
     runs-on: ubuntu-latest
     steps:
-      - name: Comment Pull Request
+      - NAME: Comment Pull Request Single-line
+        uses: kms-healthcare/il-actions/comment-pull-request@ops/test-common-actions
+        with:
+          message: 'This PS is good to go'
+
+      - name: Comment Pull Request Multi-line
         uses: kms-healthcare/il-actions/comment-pull-request@ops/test-common-actions
         with:
           message: |
-            # Hello, world!
+            ## This PR is good to go
             This is a multi-line comment.
+            > This is a blockquote
+            - This is a list
+            - This is a list
+            > [!NOTE]
+            > This is a note
+
+
+  
