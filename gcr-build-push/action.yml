@@ -42,7 +42,6 @@ runs:
 
     - name: Build Docker Image
       id: builder
-      working-directory: ${{ inputs.docker-context }}
       run: |
         docker build --tag ${{ inputs.gcloud-registry}}/${{ inputs.gcloud-project-id }}/${{ inputs.image-name }}:${{inputs.image-tag }} --file ${{ inputs.dockerfile }}	${{ inputs.docker-context }}
       shell: bash
