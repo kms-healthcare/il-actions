@@ -15,10 +15,10 @@ inputs:
     required: true
   docker_image_tag:
     description: 'Docker Image Tag (default is the commit SHA)'
-    default : ${{ github.sha }}
+    default: ${{ github.sha }}
     required: true
   dockerfile:
-    description: 'Dockerfile'
+    description: 'Dockerfile Path'
     default: 'Dockerfile'
     required: false
   context:
