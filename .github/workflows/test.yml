@@ -3,19 +3,19 @@ name: Test
 on: pull_request
 
 jobs:
-  comment:
+  comment-pull-request:
     runs-on: ubuntu-latest
     steps:
-      - NAME: Comment Pull Request Single-line
+      - name: Comment Pull Request Single-line
         uses: kms-healthcare/il-actions/comment-pull-request@${{ github.sha }}
         with:
-          message: 'This PS is good to go'
+          message: 'This composite action is passed! :white_check_mark:'
 
       - name: Comment Pull Request Multi-line
         uses: kms-healthcare/il-actions/comment-pull-request@${{ github.sha }}
         with:
           message: |
-            ## This PR is good to go
+            ## This composite action is passed! :white_check_mark:
             This is a multi-line comment.
             > This is a blockquote
             - This is a list
