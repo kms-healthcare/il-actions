@@ -4,25 +4,21 @@ inputs:
   gcloud_registry:
     description: 'Google Cloud Registry'
     required: true
-  gcloud_project_id:
+  gcloud_project:
     description: 'Google Cloud Project ID'
     required: true
-  gcloud_service_key:
-    description: 'Google Cloud Service Key (JSON)'
+  gcloud_service_account_key:
+    description: 'Google Cloud Service Account Key (JSON)'
     required: true
   docker_image_name:
     description: 'Docker Image Name (contains repo and image name, e.g. my-repo/my-image)'
     required: true
   docker_image_tag:
     description: 'Docker Image Tag (default is the commit SHA)'
-    default : ${{ github.sha }}
+    default: ${{ github.sha }}
     required: true
-  github_token:
-    description: 'Personal Access Token'
-    default: ${{ secrets.GITHUB_TOKEN }}
-    required: false
   dockerfile:
-    description: 'Dockerfile'
+    description: 'Dockerfile Path'
     default: 'Dockerfile'
     required: false
   context:
@@ -45,9 +41,10 @@ runs:
 
     - name: Output Docker Image Name and Tag
       id: get_image_name
+      shell: bash
       run: |
-        echo "docker_image_name=${{ inputs.gcloud_registry }}/${{ inputs.gcloud_project_id }}/${{ inputs.docker_image_name }}" >> $GITHUB_ENV
-        echo "docker_image_tag=${{ inputs.docker_image_tag }}" >> $GITHUB_ENV
+        echo "docker_image_name=${{ inputs.gcloud_registry }}/${{ inputs.gcloud_project_id }}/${{ inputs.docker_image_name }}" >> $GITHUB_OUTPUT
+        echo "docker_image_tag=${{ inputs.docker_image_tag }}" >> $GITHUB_OUTPUT
 
     - uses: google-github-actions/auth@v2
       with:
@@ -57,14 +54,17 @@ runs:
       uses: google-github-actions/setup-gcloud@v2
 
     - name: Configure Docker for GCR
+      shell: bash
       run: |
         gcloud auth configure-docker ${{ inputs.gcloud_registry }}
 
     - name: Build Docker Image
       id: builder
+      shell: bash
       run: |
         docker build --tag ${{ steps.get_image_name.outputs.docker_image_name }}:${{ steps.get_image_name.outputs.docker_image_tag }} -f ${{ inputs.dockerfile }} ${{ inputs.context }}
 
     - name: Push Docker Image to Google Cloud Registry
+      shell: bash
       run: |
         docker push ${{ steps.get_image_name.outputs.docker_image_name }}:${{ steps.get_image_name.outputs.docker_image_tag }}
