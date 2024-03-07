@@ -1,0 +1,42 @@
+name: Comment Pull Request
+
+inputs:
+  message:
+    description: 'Comment Body'
+    default: 'No message provided'
+    required: true
+  github_token:
+    description: 'GitHub Token'
+    required: false
+    default: ${{ secrets.GITHUB_TOKEN }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Check if Pull Request
+      run: |
+        if [ -z "$GITHUB_HEAD_REF" ]; then
+          echo "This is not a pull request. Exiting..."
+          exit 1
+        fi
+
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Split comment body with new lines
+      run: |
+        echo "split_input$(echo "${{ inputs.message }}" | tr '\n' '\n')" >> $GITHUB_ENV
+        echo $split_input
+
+    - name: Comment on Pull Request
+      uses: actions/github-script@v7
+      with:
+        github-token: ${{ inputs.github_token }}
+        script: |
+          const commentBody = 'process.env.split_input';
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: commentBody
+          });
