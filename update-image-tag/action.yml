@@ -1,6 +1,6 @@
-name: Build and push docker image to GCR
+name: Update image tag
 description: |
-  Build and Push Docker image to GCR
+  Update image tag using yq
 inputs:
   repo:
     required: true
@@ -34,7 +34,7 @@ runs:
       id: get_username
       uses: mikefarah/yq@master
       with:
-        cmd: yq -i '${{ inputs.xpath }} = "${{ inputs.tag }}"' ${{ inputs.values-file }}
+        cmd: yq e '${{ inputs.xpath }} = "${{ inputs.tag }}"' -i ${{ inputs.values-file }}
     
     - name: Push changes to gitops
       run: |
