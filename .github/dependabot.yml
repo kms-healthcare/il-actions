@@ -24,7 +24,7 @@ updates:
       prefix: ":arrow_up:"
     open-pull-requests-limit: 50
 
-  - package-ecosystem: "javascript"
+  - package-ecosystem: "npm"
     directory: "/"
     schedule:
       interval: "daily"
