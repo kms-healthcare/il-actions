@@ -1,0 +1,19 @@
+name: 'Google Chat Job Report'
+description: 'Send a message to google chat webhook.'
+
+inputs:
+  name:
+    description: 'Name of the job (will be the header of the message).'
+    required: true
+
+  url:
+    description: 'Webhook URL of the Google chat space/app.'
+    required: true
+
+  status:
+    description: 'Should be the status of GitHub Actions job (the .status context).'
+    required: true
+
+runs:
+  using: 'node20'
+  main: 'index.js'
