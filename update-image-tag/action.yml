@@ -32,7 +32,7 @@ runs:
         token: ${{ inputs.github-token }}
     - name: Get an entry with a variable that might contain dots or spaces
       id: get_username
-      uses: mikefarah/yq@master
+      uses: mikefarah/yq@mv4.42.1
       with:
         cmd: yq e '${{ inputs.xpath }} = "${{ inputs.tag }}"' -i ${{ inputs.values-file }}
     
