@@ -25,10 +25,12 @@ inputs:
   dockerfile:
     required: true
     description: Dockerfile path
+    default: Dockerfile
   
   docker-context:
     required: true
     description: Docker build context
+    default: .
 
 runs:
   using: composite
