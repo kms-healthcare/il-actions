@@ -32,6 +32,11 @@ inputs:
     description: Docker build context
     default: .
 
+  push:
+    required: false
+    description: Push or not
+    default: 'true'
+
 runs:
   using: composite
   steps:
@@ -40,27 +45,37 @@ runs:
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
+    
+    - name: Build Docker Image For Testing
+      if: ${{ inputs.push }} == 'false'
+      run: |
+        docker build --tag kms-healthcare-image:test --file ${{ inputs.dockerfile }}	${{ inputs.docker-context }}
+      shell: bash
 
-
-    - name: Build Docker Image
+    - name: Build Docker Image With Tag
+      if: ${{ inputs.push }} == 'true'
       id: builder
       run: |
         docker build --tag ${{ inputs.gcloud-registry}}/${{ inputs.gcloud-project-id }}/${{ inputs.image-name }}:${{inputs.image-tag }} --file ${{ inputs.dockerfile }}	${{ inputs.docker-context }}
       shell: bash
 
     - uses: google-github-actions/auth@v2
+      if: ${{ inputs.push }} == 'true'
       with:
         credentials_json: '${{ inputs.gcloud-secrets }}'
 
     - name: Set up Cloud SDK
+      if: ${{ inputs.push }} == 'true'
       uses: google-github-actions/setup-gcloud@v2
   
     - name: Configure Docker for GCR
+      if: ${{ inputs.push }} == 'true'
       run: |
         gcloud auth configure-docker ${{ inputs.gcloud-registry }}
       shell: bash
 
     - name: Push Docker Image to Google Cloud Registry
+      if: ${{ inputs.push }} == 'true'
       run: |
         docker push ${{ inputs.gcloud-registry}}/${{ inputs.gcloud-project-id }}/${{ inputs.image-name }}:${{inputs.image-tag }}
       shell: bash
