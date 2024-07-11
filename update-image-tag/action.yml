@@ -17,7 +17,7 @@ inputs:
   xpath:
     required: true
     description: Image tag Xpath
-  
+
   tag:
     required: true
     description: New image Tag
@@ -35,15 +35,14 @@ runs:
       uses: mikefarah/yq@v4.42.1
       with:
         cmd: yq e '${{ inputs.xpath }} = "${{ inputs.tag }}"' -i ${{ inputs.values-file }}
-    
+
     - name: Push changes to gitops
       run: |
         echo Pushing changes to ${{ inputs.repo }}
-        git config user.name "IL Ops"
-        git config user.email "tsdocode@gmail.com"
-        git add .
+        git config user.name "github-actions[bot]"
+        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git add --all
         git commit --allow-empty -m "Deploy \"${{ inputs.tag }}\" tag into ${{ inputs.values-file }}"
+        git pull --rebase
         git push -u origin master
       shell: bash
-
-      

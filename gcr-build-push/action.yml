@@ -26,14 +26,14 @@ inputs:
     required: false
     description: Dockerfile path
     default: Dockerfile
-  
+
   docker-context:
     required: false
     description: Docker build context
     default: .
 
   docker-additionals:
-    require: false
+    required: false
     description: Docker build additional commands
     default: ""
 
@@ -54,11 +54,11 @@ runs:
 
     - uses: google-github-actions/auth@v2
       with:
-        credentials_json: '${{ inputs.gcloud-secrets }}'
+        credentials_json: "${{ inputs.gcloud-secrets }}"
 
     - name: Set up Cloud SDK
       uses: google-github-actions/setup-gcloud@v2
-  
+
     - name: Configure Docker for GCR
       run: |
         gcloud auth configure-docker ${{ inputs.gcloud-registry }}
